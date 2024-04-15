@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Image Generator</title>
+</head>
+<body>
+  <input type="number" id="widthInput" placeholder="Введите ширину (100-300)">
+  <input type="number" id="heightInput" placeholder="Введите высоту (100-300)">
+  <button id="submitButton">Подтвердить</button>
+  <div id="imageContainer"></div>
+
+  <script>
+    document.getElementById('submitButton').addEventListener('click', async () => {
+      const width = parseInt(document.getElementById('widthInput').value);
+      const height = parseInt(document.getElementById('heightInput').value);
+      const imageContainer = document.getElementById('imageContainer');
+
+      if (isNaN(width) || isNaN(height) || width < 100 || width > 300 || height < 100 || height > 300) {
+        imageContainer.innerHTML = 'Одно или оба введенных числа не соответствуют диапазону';
+      } else {
+        try {
+          const response = await fetch(`https://dummyimage.com/${width}x${height}/`);
+          const blob = await response.blob();
+          const imageUrl = URL.createObjectURL(blob);
+          const img = document.createElement('img');
+          img.src = imageUrl;
+          imageContainer.innerHTML = '';
+          imageContainer.appendChild(img);
+        } catch (error) {
+          imageContainer.innerHTML = 'Ошибка получения изображения';
+        }
+      }
+    });
+  </script>
+</body>
+</html>
